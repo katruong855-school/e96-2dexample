@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 //This script was made from the following tutorial: https://blog.yarsalabs.com/player-movement-with-new-input-system-in-unity/ 
 //where NewPlayerControl is PlayerInput (the name of the input actions map)
@@ -8,9 +11,12 @@ public class PlayersMovement : MonoBehaviour
 {
 
     public float PlayersMovementSpeed; //players movement speed
+    public float PlayerJumpingForce;
     private float _playersMovementDirection = 0; //Gives direction of player movement
     private PlayerInput _inputActionReference; //reference of generated C# script from the input
     private Rigidbody2D _playersRigidBody; //reference to players rigid body
+    private bool isGrounded = true;
+
     
     // Start is called before the first frame update
     private void Start()
@@ -26,14 +32,33 @@ public class PlayersMovement : MonoBehaviour
             
             _playersMovementDirection = moving.ReadValue<float>();
         };
+
+        //Jumping the player
+        _inputActionReference.Ground.Jump.performed += jumping => { JumpThePlayer();};
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
+        if(_playersRigidBody.velocity.y == 0){
+            isGrounded = true;
+        }
+
         //use the player's rigidbody to move it
         _playersRigidBody.velocity =
             new Vector2(_playersMovementDirection * PlayersMovementSpeed, _playersRigidBody.velocity.y);
+        
+        
+    }
+
+    private void JumpThePlayer()
+    {
+        //Moving player using player rigid body.
+        if(isGrounded == true){
+            
+            _playersRigidBody.velocity = Vector2.up * PlayerJumpingForce;
+            isGrounded = false;
+        }
         
     }
 }
