@@ -41,8 +41,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Trees
+  - name: Sky
     uniqueID: 2038204559
+    locked: 0
+  - name: Platforms
+    uniqueID: 4101628287
     locked: 0
   - name: Player
     uniqueID: 564619015
